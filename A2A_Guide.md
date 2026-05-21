@@ -582,7 +582,8 @@ if __name__ == '__main__':
 ### Resources
 
 - **Documentation**: https://a2a-protocol.org
-- **GitHub**: https://github.com/a2aproject/A2A
+- **GitHub (A2A Protocol)**: https://github.com/a2aproject/A2A
+- **GitHub (A2A Guide)**: https://github.com/belarusian/A2A-Guide
 - **Python SDK**: https://github.com/a2aproject/a2a-python
 - **Samples**: https://github.com/a2aproject/a2a-samples
 - **DeepLearning.AI Course**: https://goo.gle/dlai-a2a

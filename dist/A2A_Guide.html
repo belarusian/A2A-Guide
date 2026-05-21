@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>A2A Protocol Guide</title>
+  <style>
+
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+  <style type="text/css">
+:root {
+--primary-color: #2563eb;
+--secondary-color: #1e40af;
+--accent-color: #3b82f6;
+--background-color: #ffffff;
+--text-color: #1f2937;
+--code-bg: #f8f9fa;
+--border-color: #e5e7eb;
+}
+* {
+box-sizing: border-box;
+}
+body {
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+line-height: 1.6;
+color: var(--text-color);
+max-width: 900px;
+margin: 0 auto;
+padding: 20px;
+background-color: #f9fafb;
+}
+h1, h2, h3, h4, h5, h6 {
+color: var(--secondary-color);
+margin-top: 1.5em;
+margin-bottom: 0.75em;
+line-height: 1.2;
+}
+h1 {
+font-size: 2.5em;
+border-bottom: 2px solid var(--primary-color);
+padding-bottom: 0.5em;
+margin-top: 0;
+}
+h2 {
+font-size: 1.75em;
+border-bottom: 1px solid var(--border-color);
+padding-bottom: 0.25em;
+}
+h3 {
+font-size: 1.25em;
+}
+h4 {
+font-size: 1.1em;
+color: var(--text-color);
+}
+a {
+color: var(--primary-color);
+text-decoration: none;
+}
+a:hover {
+text-decoration: underline;
+}
+code {
+background-color: var(--code-bg);
+padding: 0.2em 0.4em;
+border-radius: 3px;
+font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+font-size: 0.9em;
+}
+pre {
+background-color: var(--code-bg);
+padding: 1em;
+border-radius: 5px;
+overflow-x: auto;
+border: 1px solid var(--border-color);
+}
+pre code {
+background-color: transparent;
+padding: 0;
+}
+p {
+margin-bottom: 1em;
+}
+ul, ol {
+margin-bottom: 1em;
+padding-left: 2em;
+}
+li {
+margin-bottom: 0.5em;
+}
+hr {
+border: 0;
+border-top: 1px solid var(--border-color);
+margin: 2em 0;
+}
+blockquote {
+border-left: 4px solid var(--primary-color);
+padding-left: 1em;
+margin-left: 0;
+color: #4b5563;
+font-style: italic;
+}
+table {
+width: 100%;
+border-collapse: collapse;
+margin: 1em 0;
+background-color: white;
+box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+th, td {
+padding: 0.75em 1em;
+border: 1px solid var(--border-color);
+text-align: left;
+}
+th {
+background-color: var(--primary-color);
+color: white;
+font-weight: 600;
+}
+tr:nth-child(even) {
+background-color: #f9fafb;
+}
+strong {
+color: #111827;
+}
+
+.token.comment { color: #6b7280; }
+.token.string { color: #059669; }
+.token.number { color: #7c3aed; }
+.token.keyword { color: #dc2626; }
+.token.function { color: #2563eb; }
+.token.class-name { color: #9333ea; }
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">A2A Protocol: A Developer&#39;s Guide</h1>
+</header>
+<h1 id="a2a-protocol-a-developers-guide">A2A Protocol: A Developer&#39;s
+Guide</h1>
+<p><strong>Agent-to-Agent Communication for AI Systems</strong></p>
+<hr />
+<h2 id="what-is-a2a">What is A2A?</h2>
+<p><strong>A2A (Agent-to-Agent)</strong> is an open standard protocol
+that enables seamless communication and collaboration between AI agents
+built with different frameworks, by different vendors, and running on
+separate systems.</p>
+<p>Think of A2A as the &quot;HTTP of AI agents&quot; — it provides a common
+language that allows autonomous AI agents to discover each other&#39;s
+capabilities, delegate tasks, exchange context, and work together on
+complex user requests — all while preserving their internal opacity (no
+need to share internal state, memory, or tools).</p>
+<h3 id="key-statistics">Key Statistics</h3>
+<ul>
+<li><strong>License</strong>: Apache 2.0</li>
+<li><strong>Maintained by</strong>: The Linux Foundation (contributed by
+Google)</li>
+<li><strong>Latest Version</strong>: 1.0.0 (March 2026)</li>
+<li><strong>SDKs</strong>: Python, Go, JavaScript, Java, .NET</li>
+<li><strong>Stars</strong>: 23.9k+ on GitHub</li>
+</ul>
+<hr />
+<h2 id="core-concepts">Core Concepts</h2>
+<h3 id="1-architecture">1. Architecture</h3>
+<p>A2A follows a <strong>client-server architecture</strong>:</p>
+<pre><code>┌─────────────────┐
+│  A2A Client     │  (The requesting agent)
+│  (Local Agent)  │
+└────────┬────────┘
+         │ HTTP(S)
+         │ JSON-RPC 2.0 / gRPC / REST
+         ▼
+┌─────────────────┐
+│  A2A Server     │  (The responding agent)
+│  (Remote Agent) │
+└─────────────────┘</code></pre>
+<h3 id="2-agent-discovery-the-agent-card">2. Agent Discovery: The Agent
+Card</h3>
+<p>Every A2A-compliant agent publishes an <strong>Agent Card</strong> at
+a well-known URL (typically <code>/.well-known/agent-card</code>).</p>
+<p>This JSON document contains:</p>
+<ul>
+<li>Agent identity (name, description)</li>
+<li>Supported capabilities and skills</li>
+<li>Service endpoint URL</li>
+<li>Authentication requirements (security schemes)</li>
+<li>Supported protocol bindings</li>
+</ul>
+<p><strong>Example Agent Card (simplified)</strong>:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;WeatherAgent&quot;</span><span class="fu">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;An agent that provides weather forecasts&quot;</span><span class="fu">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;protocolVersion&quot;</span><span class="fu">:</span> <span class="st">&quot;2024-06-01&quot;</span><span class="fu">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;capabilities&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;sendMessage&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;sendStreamingMessage&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;getTask&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;endpoints&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;url&quot;</span><span class="fu">:</span> <span class="st">&quot;http://localhost:10001&quot;</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;securitySchemes&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;http&quot;</span><span class="fu">,</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;scheme&quot;</span><span class="fu">:</span> <span class="st">&quot;bearer&quot;</span><span class="fu">,</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;bearerFormat&quot;</span><span class="fu">:</span> <span class="st">&quot;JWT&quot;</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="3-protocol-bindings">3. Protocol Bindings</h3>
+<p>A2A supports multiple transport mechanisms with a <strong>layered
+architecture</strong>:</p>
+<h4 id="layer-1-canonical-data-model">Layer 1: Canonical Data Model</h4>
+<ul>
+<li>Defined in Protocol Buffers (<code>a2a.proto</code>)</li>
+<li>Protocol-agnostic data structures (Task, Message, Part, Artifact,
+AgentCard)</li>
+</ul>
+<h4 id="layer-2-abstract-operations">Layer 2: Abstract Operations</h4>
+<ul>
+<li><code>sendMessage</code> - Send a message and get a response</li>
+<li><code>sendStreamingMessage</code> - Send a message with streaming
+updates</li>
+<li><code>getTask</code> - Retrieve task state</li>
+<li><code>listTasks</code> - List tasks with filtering</li>
+<li><code>cancelTask</code> - Cancel a running task</li>
+<li><code>subscribeToTask</code> - Subscribe to task updates</li>
+</ul>
+<h4 id="layer-3-protocol-bindings">Layer 3: Protocol Bindings</h4>
+<ol type="1">
+<li><strong>JSON-RPC 2.0 over HTTP(S)</strong> - Primary binding</li>
+<li><strong>gRPC</strong> - For high-performance scenarios</li>
+<li><strong>HTTP+JSON/REST</strong> - Standard RESTful endpoints</li>
+<li><strong>Custom bindings</strong> - Can be created as needed</li>
+</ol>
+<p><strong>Data Flow Example</strong>:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Client sends a message (JSON-RPC 2.0 style)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>POST <span class="op">/</span>sendMessage</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>Content<span class="op">-</span>Type: application<span class="op">/</span>json</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;jsonrpc&quot;</span>: <span class="st">&quot;2.0&quot;</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;method&quot;</span>: <span class="st">&quot;sendMessage&quot;</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;params&quot;</span>: {</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;message&quot;</span>: {</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;role&quot;</span>: <span class="st">&quot;user&quot;</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;parts&quot;</span>: [{<span class="st">&quot;type&quot;</span>: <span class="st">&quot;text&quot;</span>, <span class="st">&quot;text&quot;</span>: <span class="st">&quot;What&#39;s the weather in LA?&quot;</span>}]</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  },</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;id&quot;</span>: <span class="st">&quot;12345&quot;</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="4-task-centric-design">4. Task-Centric Design</h3>
+<p>A2A uses <strong>Tasks</strong> as the fundamental unit of work:</p>
+<pre><code>┌─────────────────────────────────────┐
+│           Task                      │
+│  - id: string                       │
+│  - contextId: string (optional)     │
+│  - status: TaskStatus               │
+│  - artifacts: list[Artifact]        │
+│  - history: list[Message]           │
+└─────────────────────────────────────┘
+
+Task Status States:
+- submitted  : Task received, queued
+- working    : Task is being processed
+- input_required : Waiting for user input
+- completed  : Task finished successfully
+- failed     : Task encountered an error
+- canceled   : Task was cancelled
+- rejected   : Task was rejected</code></pre>
+<h3 id="5-streaming--asynchronous-operations">5. Streaming &amp;
+Asynchronous Operations</h3>
+<p>A2A natively supports long-running operations through:</p>
+<ol type="1">
+<li><strong>Server-Sent Events (SSE)</strong> for streaming updates</li>
+<li><strong>Push Notifications</strong> via webhook for asynchronous
+updates</li>
+</ol>
+<p><strong>Streaming Example</strong>:</p>
+<pre><code>HTTP/1.1 200 OK
+Content-Type: text/event-stream
+
+data: {&quot;event&quot;: &quot;task&quot;, &quot;task&quot;: {...}}
+data: {&quot;event&quot;: &quot;status&quot;, &quot;status&quot;: &quot;working&quot;, &quot;message&quot;: &quot;...&quot;}
+data: {&quot;event&quot;: &quot;artifact&quot;, &quot;artifact&quot;: {...}}
+data: {&quot;event&quot;: &quot;status&quot;, &quot;status&quot;: &quot;completed&quot;}</code></pre>
+<hr />
+<h2 id="building-a-multi-agent-system-with-a2a">Building a Multi-Agent
+System with A2A</h2>
+<p>Let&#39;s explore a practical example: an <strong>Airbnb Planner
+Multi-Agent System</strong>.</p>
+<h3 id="system-overview">System Overview</h3>
+<p>This system demonstrates three agents working together:</p>
+<ol type="1">
+<li><p><strong>Host Agent</strong> (Orchestrator)</p>
+<ul>
+<li>Runs on Google ADK</li>
+<li>Routes user requests to appropriate specialized agents</li>
+<li>Uses LangGraph for multi-agent orchestration</li>
+</ul></li>
+<li><p><strong>Airbnb Agent</strong> (Specialized)</p>
+<ul>
+<li>Uses LangGraph with Google Generative AI</li>
+<li>Integrates with MCP tools for Airbnb search</li>
+<li>Handles accommodation queries</li>
+</ul></li>
+<li><p><strong>Weather Agent</strong> (Specialized)</p>
+<ul>
+<li>Uses Google ADK with LiteLLM</li>
+<li>Integrates with MCP tools for weather data</li>
+<li>Handles weather forecast queries</li>
+</ul></li>
+</ol>
+<h3 id="architecture-diagram">Architecture Diagram</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                         User Request                            │
+│                  &quot;Find me a place in LA&quot;                        │
+└─────────────────────────────────────────────────────────────────┘
+                                            │
+                                            ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    Host Agent (ADK)                             │
+│                    - Routing Logic                              │
+│                    - Task Coordination                          │
+└─────────────────────────────────────────────────────────────────┘
+                   │                            │
+                   │                            │
+        ┌───────────┴──────────────┐   ┌────────┴────────────────┐
+        ▼                          ▼   ▼                         ▼
+┌───────────────────┐    ┌─────────────────────┐  ┌─────────────────┐
+│  Airbnb Agent     │    │  Weather Agent      │  │  Weather Agent  │
+│  - LangGraph      │    │  - Google ADK       │  │  - Google ADK   │
+│  - MCP Tools      │    │  - MCP Tools        │  │  - MCP Tools    │
+│  - Airbnb Search  │    │  - Weather Data     │  │  - Weather Data │
+└────────┬──────────┘    └──────────┬──────────┘  └────────┬────────┘
+         │                          │                      │
+         │                          │                      │
+         └───────────┬──────────────┴──────────────────────┘
+                     │
+                     ▼
+            ┌──────────────────┐
+            │  A2A Protocol    │
+            │  - JSON-RPC      │
+            │  - HTTP/2        │
+            │  - SSE Streaming │
+            └──────────────────┘</code></pre>
+<h3 id="code-breakdown">Code Breakdown</h3>
+<h4 id="1-host-agent-agent-card-discovery">1. Host Agent: Agent Card
+Discovery</h4>
+<p>The host agent discovers and connects to remote agents:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> a2a.client <span class="im">import</span> A2ACardResolver</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> a2a.types <span class="im">import</span> AgentCard</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> discover_agents():</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Discover and connect to remote A2A agents.&quot;&quot;&quot;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    agents <span class="op">=</span> [</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;http://localhost:10001&#39;</span>,  <span class="co"># Weather Agent</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;http://localhost:10002&#39;</span>,  <span class="co"># Airbnb Agent</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    remote_connections <span class="op">=</span> {}</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    cards <span class="op">=</span> {}</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">async</span> <span class="cf">with</span> httpx.AsyncClient(timeout<span class="op">=</span><span class="dv">30</span>) <span class="im">as</span> client:</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> agent_url <span class="kw">in</span> agents:</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>            card_resolver <span class="op">=</span> A2ACardResolver(client, agent_url)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Fetch the Agent Card</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>            card: AgentCard <span class="op">=</span> <span class="cf">await</span> card_resolver.get_agent_card()</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Store connection info</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>            remote_connections[card.name] <span class="op">=</span> RemoteAgentConnections(</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>                agent_card<span class="op">=</span>card, </span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>                agent_url<span class="op">=</span>agent_url</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>            cards[card.name] <span class="op">=</span> card</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> remote_connections, cards</span></code></pre></div>
+<h4 id="2-host-agent-task-routing">2. Host Agent: Task Routing</h4>
+<p>The host routes requests to appropriate agents:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> google.adk <span class="im">import</span> Agent</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> google.adk.tools <span class="im">import</span> tool</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> RoutingAgent:</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Routes user requests to specialized A2A agents.&quot;&quot;&quot;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, remote_connections: <span class="bu">dict</span>):</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.connections <span class="op">=</span> remote_connections</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">@tool</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">async</span> <span class="kw">def</span> send_message(<span class="va">self</span>, agent_name: <span class="bu">str</span>, task: <span class="bu">str</span>):</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;Send a task to a remote A2A agent.&quot;&quot;&quot;</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>        client <span class="op">=</span> <span class="va">self</span>.connections[agent_name]</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Create A2A message request</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>        payload <span class="op">=</span> {</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;message&#39;</span>: {</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;role&#39;</span>: <span class="st">&#39;user&#39;</span>,</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;parts&#39;</span>: [{<span class="st">&#39;type&#39;</span>: <span class="st">&#39;text&#39;</span>, <span class="st">&#39;text&#39;</span>: task}],</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;messageId&#39;</span>: <span class="bu">str</span>(uuid.uuid4()),</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>            },</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>        message_request <span class="op">=</span> SendMessageRequest(</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>            <span class="bu">id</span><span class="op">=</span><span class="bu">str</span>(uuid.uuid4()),</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>            params<span class="op">=</span>MessageSendParams.model_validate(payload)</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Send via A2A</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>        response <span class="op">=</span> <span class="cf">await</span> client.send_message(message_request)</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> response.root.result.model_dump()</span></code></pre></div>
+<h4 id="3-airbnb-agent-a2a-server">3. Airbnb Agent: A2A Server</h4>
+<p>The Airbnb agent exposes itself as an A2A server:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> a2a.server.agent_execution <span class="im">import</span> AgentExecutor, RequestContext</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> a2a.server.events.event_queue <span class="im">import</span> EventQueue</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> airbnb_agent <span class="im">import</span> AirbnbAgent  <span class="co"># Your LangGraph agent</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> AirbnbAgentExecutor(AgentExecutor):</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Executes tasks using the Airbnb LangGraph agent.&quot;&quot;&quot;</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, mcp_tools: <span class="bu">list</span>):</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.agent <span class="op">=</span> AirbnbAgent(mcp_tools<span class="op">=</span>mcp_tools)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">async</span> <span class="kw">def</span> execute(<span class="va">self</span>, context: RequestContext, event_queue: EventQueue):</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;Execute an A2A task.&quot;&quot;&quot;</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>        query <span class="op">=</span> context.get_user_input()</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Stream results from LangGraph agent</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">async</span> <span class="cf">for</span> event <span class="kw">in</span> <span class="va">self</span>.agent.stream(query, context.context_id):</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> event[<span class="st">&#39;is_task_complete&#39;</span>]:</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>                <span class="co"># Send final artifact</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>                <span class="cf">await</span> event_queue.enqueue_event(</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>                    TaskArtifactUpdateEvent(</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>                        artifact<span class="op">=</span>new_text_artifact(</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>                            name<span class="op">=</span><span class="st">&#39;result&#39;</span>,</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>                            text<span class="op">=</span>event[<span class="st">&#39;content&#39;</span>]</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>                        ),</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>                        status<span class="op">=</span>TaskState.completed,</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>                    )</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>                )</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>            <span class="cf">elif</span> event[<span class="st">&#39;require_user_input&#39;</span>]:</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>                <span class="co"># Request user input</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>                <span class="cf">await</span> event_queue.enqueue_event(</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>                    TaskStatusUpdateEvent(</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>                        status<span class="op">=</span>TaskState.input_required,</span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>                        message<span class="op">=</span>event[<span class="st">&#39;content&#39;</span>]</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>                    )</span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>                )</span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>                <span class="co"># Send streaming updates</span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>                <span class="cf">await</span> event_queue.enqueue_event(</span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>                    TaskStatusUpdateEvent(</span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>                        status<span class="op">=</span>TaskState.working,</span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>                        message<span class="op">=</span>event[<span class="st">&#39;content&#39;</span>]</span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>                    )</span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>                )</span></code></pre></div>
+<h4 id="4-weather-agent-adk-integration">4. Weather Agent: ADK
+Integration</h4>
+<p>The Weather agent uses Google ADK with MCP tools:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> google.adk <span class="im">import</span> Agent</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> google.adk.tools.mcp_tool <span class="im">import</span> MCPToolset</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> google.adk.models.lite_llm <span class="im">import</span> LiteLlm</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> create_weather_agent() <span class="op">-&gt;</span> Agent:</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Create a weather agent with MCP tools.&quot;&quot;&quot;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Agent(</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        model<span class="op">=</span>LiteLlm(model<span class="op">=</span><span class="st">&#39;gemini-2.5-flash&#39;</span>),</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>        name<span class="op">=</span><span class="st">&#39;weather_agent&#39;</span>,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        description<span class="op">=</span><span class="st">&#39;Provides weather forecasts&#39;</span>,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>        instruction<span class="op">=</span><span class="st">&#39;You are a weather assistant...&#39;</span>,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>        tools<span class="op">=</span>[</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>            MCPToolset(</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>                connection_params<span class="op">=</span>StdioServerParameters(</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>                    command<span class="op">=</span><span class="st">&#39;python&#39;</span>,</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>                    args<span class="op">=</span>[<span class="st">&#39;./weather_mcp.py&#39;</span>],  <span class="co"># Your MCP server</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>                ),</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>        ],</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div>
+<h3 id="running-the-sample">Running the Sample</h3>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Terminal 1: Start Weather Agent</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> weather_agent</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run .</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Terminal 2: Start Airbnb Agent</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> airbnb_agent</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run .</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Terminal 3: Start Host Agent</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> host_agent</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run .</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Open browser to http://localhost:8083</span></span></code></pre></div>
+<hr />
+<h2 id="key-features">Key Features</h2>
+<h3 id="1-opacity-preservation">1. Opacity Preservation</h3>
+<p>Agents collaborate <strong>without exposing internal
+state</strong>:</p>
+<pre><code>┌─────────────────┐           ┌─────────────────┐
+│  Agent A        │           │  Agent B        │
+│  - Memory: ✓    │  ──X──&gt;   │  - Memory: ✓    │
+│  - Tools: ✓     │  (No     │  - Tools: ✓     │
+│  - Logic: ✓     │   sharing)│  - Logic: ✓     │
+└─────────────────┘           └─────────────────┘
+         │                           │
+         │────── A2A Communication ──┘
+              (Messages, Artifacts)</code></pre>
+<h3 id="2-security">2. Security</h3>
+<ul>
+<li>HTTPS for transport</li>
+<li>JWT authentication via OAuth2/OpenID Connect</li>
+<li>Agent card signing for verification</li>
+<li>Input validation for external data</li>
+</ul>
+<h3 id="3-multi-turn-support">3. Multi-Turn Support</h3>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First message</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>message_request <span class="op">=</span> SendMessageRequest(</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    params<span class="op">=</span>MessageSendParams(</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>        message<span class="op">=</span>{</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;role&#39;</span>: <span class="st">&#39;user&#39;</span>,</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;parts&#39;</span>: [{<span class="st">&#39;type&#39;</span>: <span class="st">&#39;text&#39;</span>, <span class="st">&#39;text&#39;</span>: <span class="st">&#39;I want to book...&#39;</span>}]</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> <span class="cf">await</span> client.send_message(message_request)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Continue conversation with context_id and task_id</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>message_request <span class="op">=</span> SendMessageRequest(</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    params<span class="op">=</span>MessageSendParams(</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>        message<span class="op">=</span>{</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;role&#39;</span>: <span class="st">&#39;user&#39;</span>,</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;parts&#39;</span>: [{<span class="st">&#39;type&#39;</span>: <span class="st">&#39;text&#39;</span>, <span class="st">&#39;text&#39;</span>: <span class="st">&#39;Actually, change dates...&#39;</span>}],</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;contextId&#39;</span>: response.context_id,</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;taskId&#39;</span>: response.task_id</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<h3 id="4-artifact-exchange">4. Artifact Exchange</h3>
+<p>Agents can exchange rich content:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;artifacts&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;listing_123&quot;</span><span class="fu">,</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;text&quot;</span><span class="fu">,</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;airbnb_listing&quot;</span><span class="fu">,</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Property details&quot;</span><span class="fu">,</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;text&quot;</span><span class="fu">:</span> <span class="st">&quot;Spacious 2BR in downtown LA...&quot;</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;map_123&quot;</span><span class="fu">,</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;file&quot;</span><span class="fu">,</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;location_map&quot;</span><span class="fu">,</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;file&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;uri&quot;</span><span class="fu">:</span> <span class="st">&quot;https://example.com/map.png&quot;</span><span class="fu">,</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;mimeType&quot;</span><span class="fu">:</span> <span class="st">&quot;image/png&quot;</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h2 id="a2a-vs-mcp-understanding-the-relationship">A2A vs MCP:
+Understanding the Relationship</h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>MCP (Model Context Protocol)</th>
+<th>A2A (Agent-to-Agent)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Purpose</strong></td>
+<td>Connects models to tools &amp; data</td>
+<td>Connects agents to each other</td>
+</tr>
+<tr>
+<td><strong>Focus</strong></td>
+<td>Model-to-tool communication</td>
+<td>Agent-to-agent collaboration</td>
+</tr>
+<tr>
+<td><strong>Scope</strong></td>
+<td>Single model ↔︎ multiple tools</td>
+<td>Multiple autonomous agents</td>
+</tr>
+<tr>
+<td><strong>Complexity</strong></td>
+<td>Stateless tool calls</td>
+<td>Stateful task management</td>
+</tr>
+<tr>
+<td><strong>Use Case</strong></td>
+<td>&quot;Query database for user&quot;</td>
+<td>&quot;Plan trip: book flights, hotels, tours&quot;</td>
+</tr>
+</tbody>
+</table>
+<p><strong>How They Work Together</strong>:</p>
+<pre><code>User Request
+    │
+    ▼
+┌─────────────────────────────────────┐
+│         A2A Host Agent              │
+│  - Orchestrates multiple agents     │
+│  - Manages task flow                │
+│  - Handles multi-turn conversations │
+└─────────────────────────────────────┘
+           │               │
+           ▼               ▼
+    ┌──────────┐    ┌────────────┐
+    │Weather   │    │Airbnb      │
+    │Agent     │    │Agent       │
+    │          │    │            │
+    │- LangGraph│    │- ADK       │
+    │- MCP Tools│    │- MCP Tools │
+    └──────────┘    └────────────┘
+           │               │
+           ▼               ▼
+      Database          API</code></pre>
+<hr />
+<h2 id="best-practices">Best Practices</h2>
+<h3 id="1-agent-design">1. Agent Design</h3>
+<ul>
+<li><strong>Single Responsibility</strong>: Each agent should have a
+focused capability</li>
+<li><strong>Clear Contract</strong>: Document capabilities in Agent
+Card</li>
+<li><strong>Error Handling</strong>: Handle failures gracefully with
+clear messages</li>
+<li><strong>Idempotency</strong>: Design operations to be safe for
+retries</li>
+</ul>
+<h3 id="2-security-1">2. Security</h3>
+<ul>
+<li><strong>Validate Input</strong>: Always sanitize data from external
+agents</li>
+<li><strong>Use HTTPS</strong>: Never send sensitive data over HTTP</li>
+<li><strong>Rate Limiting</strong>: Implement rate limits to prevent
+abuse</li>
+<li><strong>Authentication</strong>: Require auth for production
+agents</li>
+</ul>
+<h3 id="3-performance">3. Performance</h3>
+<ul>
+<li><strong>Streaming</strong>: Use streaming for long-running
+operations</li>
+<li><strong>Caching</strong>: Cache Agent Cards to reduce discovery
+overhead</li>
+<li><strong>Async</strong>: Use async I/O for better concurrency</li>
+<li><strong>Connection Pooling</strong>: Share HTTP clients across
+connections</li>
+</ul>
+<h3 id="4-monitoring">4. Monitoring</h3>
+<ul>
+<li><strong>Task Tracking</strong>: Log task lifecycle events</li>
+<li><strong>Metrics</strong>: Track response times and success
+rates</li>
+<li><strong>Tracing</strong>: Use distributed tracing for debugging</li>
+<li><strong>Alerting</strong>: Alert on task failures or timeouts</li>
+</ul>
+<hr />
+<h2 id="getting-started">Getting Started</h2>
+<h3 id="install-the-python-sdk">Install the Python SDK</h3>
+<div class="sourceCode" id="cb16"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install a2a-sdk</span></code></pre></div>
+<h3 id="create-a-simple-agent">Create a Simple Agent</h3>
+<div class="sourceCode" id="cb17"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> a2a.server <span class="im">import</span> A2AServer</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> a2a.types <span class="im">import</span> AgentCard, Task</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> main():</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create your agent</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    agent <span class="op">=</span> YourCustomAgent()</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create an A2A server</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    server <span class="op">=</span> A2AServer(</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>        agent<span class="op">=</span>agent,</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>        card<span class="op">=</span>AgentCard(</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>            name<span class="op">=</span><span class="st">&#39;MyAgent&#39;</span>,</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>            description<span class="op">=</span><span class="st">&#39;A helpful AI assistant&#39;</span>,</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>            protocolVersion<span class="op">=</span><span class="st">&#39;2024-06-01&#39;</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Start the server</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">await</span> server.serve(host<span class="op">=</span><span class="st">&#39;0.0.0.0&#39;</span>, port<span class="op">=</span><span class="dv">8000</span>)</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&#39;__main__&#39;</span>:</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> asyncio</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>    asyncio.run(main())</span></code></pre></div>
+<h3 id="resources">Resources</h3>
+<ul>
+<li><strong>Documentation</strong>: <a href="https://a2a-protocol.org">https://a2a-protocol.org</a></li>
+<li><strong>GitHub</strong>: <a href="https://github.com/a2aproject/A2A">https://github.com/a2aproject/A2A</a></li>
+<li><strong>Python SDK</strong>: <a href="https://github.com/a2aproject/a2a-python">https://github.com/a2aproject/a2a-python</a></li>
+<li><strong>Samples</strong>: <a href="https://github.com/a2aproject/a2a-samples">https://github.com/a2aproject/a2a-samples</a></li>
+<li><strong>DeepLearning.AI Course</strong>: <a href="https://goo.gle/dlai-a2a">https://goo.gle/dlai-a2a</a></li>
+</ul>
+<hr />
+<h2 id="conclusion">Conclusion</h2>
+<p>A2A represents a significant step forward in AI agent ecosystems. By
+providing a standardized protocol for agent-to-agent communication, it
+enables:</p>
+<p>✅ <strong>Interoperability</strong> - Agents built with different
+frameworks can work together ✅ <strong>Scalability</strong> - New
+agents can be added without rewriting existing code ✅
+<strong>Security</strong> - Opacity preservation protects intellectual
+property ✅ <strong>Flexibility</strong> - Multiple protocol bindings
+suit different use cases</p>
+<p>Whether you&#39;re building a personal assistant, enterprise automation
+system, or complex multi-agent application, A2A provides the foundation
+for robust, maintainable agent communication.</p>
+<hr />
+<h2 id="a2a-json-encoding-a-critical-deep-dive">A2A JSON Encoding: A
+Critical Deep Dive</h2>
+<p>This section clarifies a common misconception about A2A&#39;s JSON
+serialization and addresses the question of encoding safety.</p>
+<h3 id="the-short-answer-grpc-is-safe-httpjson-uses-protojson-sdk-handles-it">The
+Short Answer: <strong>gRPC is safe, HTTP+JSON uses ProtoJSON (SDK
+handles it)</strong></h3>
+<p>The key insight: <strong>A2A does NOT use raw JSON
+serialization</strong>. Instead, it uses <strong>ProtoJSON</strong> - a
+specific serialization format defined by Protocol Buffers.</p>
+<h3 id="what-is-protojson">What is ProtoJSON?</h3>
+<p>ProtoJSON is a standardized JSON encoding for Protocol Buffers. It
+has specific rules that differ from standard JSON:</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Standard JSON</th>
+<th>ProtoJSON</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Field names</td>
+<td><code>snake_case</code> → <code>snake_case</code></td>
+<td><code>snake_case</code> → <code>camelCase</code></td>
+</tr>
+<tr>
+<td>Enum values</td>
+<td><code>UPPERCASE</code></td>
+<td><code>SCREAMING_SNAKE_CASE</code></td>
+</tr>
+<tr>
+<td><code>bytes</code> fields</td>
+<td>raw bytes or base64</td>
+<td>always <strong>base64 encoded</strong></td>
+</tr>
+<tr>
+<td><code>google.protobuf.Value</code></td>
+<td>JSON value</td>
+<td>JSON-ified value</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Source</strong>: <a href="https://github.com/a2aproject/A2A/blob/main/adrs/adr-001-protojson-serialization.md">ADR-001:
+Leverage ProtoJSON Specification</a></p>
+<h3 id="how-text-flows-through-a2a">How Text Flows Through A2A</h3>
+<h4 id="grpc-binding-binary-safe">gRPC Binding (Binary-Safe)</h4>
+<pre><code>Model → Raw string → Proto message → gRPC binary → Proto deserialization → Remote Model</code></pre>
+<p>✅ <strong>No escaping concerns</strong> - binary transport handles
+everything</p>
+<h4 id="httpjsonjson-rpc-binding-sdk-handles-protojson">HTTP+JSON/JSON-RPC
+Binding (SDK handles ProtoJSON)</h4>
+<pre><code>Model → Raw string → Pydantic → Proto message → ProtoJSON → JSON → JSON parse → Pydantic → Proto → Remote Model</code></pre>
+<p>The <strong>SDK</strong> uses
+<code>google.protobuf.json_format.MessageToJson()</code> which:</p>
+<ol type="1">
+<li>Converts Python objects to proto messages</li>
+<li>Applies ProtoJSON rules (camelCase, base64, SCREAMING_SNAKE_CASE
+enums)</li>
+<li>Returns properly serialized JSON</li>
+</ol>
+<h3 id="the-double-escaping-risk-when-it-actually-happens">The
+Double-Escaping Risk: When It Actually Happens</h3>
+<p>The risk exists <strong>ONLY</strong> if you bypass the SDK&#39;s proto
+models:</p>
+<h4 id="x-dangerous---manual-json-construction">❌ DANGEROUS - Manual
+JSON Construction</h4>
+<div class="sourceCode" id="cb20"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># DANGEROUS - Pre-serializing creates double-encoding!</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> a2a.types <span class="im">import</span> Part, TextPart</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># If LLM returns JSON string...</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>llm_response <span class="op">=</span> <span class="st">&#39;{&quot;text&quot;: &quot;Hello</span><span class="ch">\\</span><span class="st">nWorld&quot;}&#39;</span>  <span class="co"># Already JSON</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>part <span class="op">=</span> Part(root<span class="op">=</span>TextPart(text<span class="op">=</span>llm_response))  <span class="co"># SDK will JSON-encode AGAIN</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Result: &quot;Hello\\\\nWorld&quot; (double-escaped!)</span></span></code></pre></div>
+<h4 id="white_check_mark-safe---use-proto-models">✅ SAFE - Use Proto
+Models</h4>
+<div class="sourceCode" id="cb21"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> a2a.types <span class="im">import</span> Part, TextPart</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Pass raw strings directly</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>part <span class="op">=</span> Part(root<span class="op">=</span>TextPart(text<span class="op">=</span><span class="st">&quot;Hello</span><span class="ch">\n</span><span class="st">World&quot;</span>))  <span class="co"># SDK handles ProtoJSON</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Result: &quot;Hello\nWorld&quot; (properly escaped once)</span></span></code></pre></div>
+<h3 id="how-to-stay-safe">How to Stay Safe</h3>
+<ol type="1">
+<li><strong>Use the SDK&#39;s proto models</strong> (<code>TextPart</code>,
+<code>Message</code>, <code>SendMessageRequest</code>, etc.)</li>
+<li><strong>Don&#39;t manually construct JSON strings</strong> for message
+parts</li>
+<li><strong>Don&#39;t embed pre-serialized JSON</strong> from LLMs in your
+A2A messages</li>
+<li><strong>If LLM returns JSON</strong>, parse it first, then extract
+raw strings:</li>
+</ol>
+<div class="sourceCode" id="cb22"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># SAFE - Parse LLM JSON first</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> a2a.types <span class="im">import</span> Part, TextPart</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># LLM returns JSON string</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>llm_response <span class="op">=</span> llm.generate(<span class="st">&#39;...&#39;</span>)  <span class="co"># &#39;{&quot;result&quot;: &quot;Hello\\nWorld&quot;}&#39;</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Parse first</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>parsed <span class="op">=</span> json.loads(llm_response)</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>text <span class="op">=</span> parsed[<span class="st">&#39;result&#39;</span>]  <span class="co"># Raw string: &quot;Hello\nWorld&quot;</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Now use in proto model</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>part <span class="op">=</span> Part(root<span class="op">=</span>TextPart(text<span class="op">=</span>text))  <span class="co"># SDK handles ProtoJSON</span></span></code></pre></div>
+<h3 id="protocol-binding-comparison">Protocol Binding Comparison</h3>
+<table>
+<thead>
+<tr>
+<th>Binding</th>
+<th>Serialization</th>
+<th>Escaping Risk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>gRPC</strong></td>
+<td>Proto binary</td>
+<td>✅ None - binary-safe</td>
+</tr>
+<tr>
+<td><strong>HTTP+JSON/SDK</strong></td>
+<td>ProtoJSON via <code>MessageToJson()</code></td>
+<td>✅ None if using SDK</td>
+</tr>
+<tr>
+<td><strong>HTTP+JSON/Manual</strong></td>
+<td>Raw JSON</td>
+<td>❌ High - you must handle escaping</td>
+</tr>
+</tbody>
+</table>
+<h3 id="summary">Summary</h3>
+<ul>
+<li><strong>gRPC</strong>: No concerns - binary transport</li>
+<li><strong>HTTP+JSON with SDK</strong>: No concerns - SDK uses
+ProtoJSON correctly</li>
+<li><strong>HTTP+JSON without SDK</strong>: You must handle ProtoJSON
+rules manually</li>
+<li><strong>Double-escaping</strong>: Only happens if you manually
+construct JSON or embed pre-serialized JSON</li>
+</ul>
+<hr />
+<h2 id="building-pdfs-from-markdown">Building PDFs from Markdown</h2>
+<p>The A2A Protocol repository uses a simple make-based pipeline for
+exporting markdown to PDF:</p>
+<h3 id="tools-used">Tools Used</h3>
+<ul>
+<li><strong>Pandoc</strong> - Converts markdown to HTML, DOCX, and PDF
+(via LaTeX)</li>
+<li><strong>md-to-pdf</strong> (Node.js) - Converts markdown to PDF via
+Chromium/Chrome</li>
+<li><strong>Make</strong> - Orchestrates the build process</li>
+</ul>
+<h3 id="basic-setup">Basic Setup</h3>
+<ol type="1">
+<li>Install Pandoc: <code>brew install pandoc</code></li>
+<li>Install Node.js: <a href="https://nodejs.org">https://nodejs.org</a></li>
+<li>Run: <code>make</code> (builds all formats)</li>
+</ol>
+<h3 id="example-makefile-targets">Example Makefile Targets</h3>
+<div class="sourceCode" id="cb23"><pre class="sourceCode makefile"><code class="sourceCode makefile"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># HTML export</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>make html</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># PDF export (via Chromium)</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>make pdf</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co"># PDF export (via LaTeX)</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>make pdf-latex</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Clean output</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>make clean</span></code></pre></div>
+<h3 id="configuring-pdf-output">Configuring PDF Output</h3>
+<p>PDF styling is controlled by:</p>
+<ol type="1">
+<li><strong>CSS file</strong> - <code>resume-html.css</code> (or
+similar)</li>
+<li><strong>PDF config</strong> - JavaScript file specifying page size,
+margins, headers/footers</li>
+</ol>
+<p>See <code>scripts/resume-pdf-config.js</code> for an example
+configuration.</p>
+<hr />
+<p><em>This guide was created to help developers understand and
+implement A2A-based systems. For the latest updates, always refer to the
+official documentation and GitHub repository.</em></p>
+</body>
+</html>
